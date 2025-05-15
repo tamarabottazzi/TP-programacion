@@ -25,7 +25,7 @@ mult = a*b
 resta = a-b
 div = round(a/b,4)
 
-print(a, '+', b, '=', suma)
+print(f"{a} + {b} es igual a", suma)
 print(a, '*', b, '=', mult)
 print(a, '-', b, '=', resta)
 print(a, '/', b, '=', div)
