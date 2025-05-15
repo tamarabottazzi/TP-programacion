@@ -15,10 +15,12 @@ Created on Sun May  4 17:43:59 2025
 #mostrar: 
 #    • Totales generales por concepto (básico, antigüedad, salario familiar y 
 # retenciones).
-#    • Nombre del empleado que obtuvo la mayor retribución (neto).
+#    • Nombre del empleado que obtuvo la mayor retribución (neto). ESTO FALTA HACER
 
 # Ingresar el sueldo básico (único para todos los empleados):
 basico = 1000
+
+
 
 # Inicializar listas: 
 
