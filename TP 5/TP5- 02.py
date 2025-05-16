@@ -15,15 +15,14 @@ n = int(input('Ingrese un número natural: '))
 # Función validar número ingresado:
 def validar(x):
     # Validar que un nro entero sea natural
-    if (x<=0):
+    while (x<=0): 
         print(x, 'es valor negativo, es incorrecto')
         x =int(input('Ingrese un número natural: '))
-    else: 
-        print(x,'es válido')
-    return validar
-
+    return x
+#print(x,'es válido')    
+    
 # Aplica la validación del número ingresado: 
-validar(n)
+nval = validar(n)
 
 # Función factorial: 
 def fact(y): # Factorial de un nro natural
@@ -32,6 +31,6 @@ def fact(y): # Factorial de un nro natural
         prod = prod*(i+1)
     return prod
 
-# Aplicar factorial a n:
-print(fact(n))        
+# Aplicar factorial a nval:
+print(fact(nval))        
     

@@ -12,7 +12,7 @@ Created on Sun May  4 11:35:45 2025
 
 n = int(input('Ingrese un número entero: '))
 
-# Posibles divisores inicializando en n/21: 
+# Posibles divisores inicializando en n/2: 
 p = n//2
 
 while ((n%(p)>0) and (p<=n/2)): #mientras p no sea divisor 
