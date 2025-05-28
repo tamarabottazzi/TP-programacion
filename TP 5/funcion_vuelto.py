@@ -13,7 +13,24 @@ Created on Thu May 22 16:16:01 2025
 
 
 def vuelto(precio, dinero):
+    """
+
+    Parameters
+    ----------
+    precio : integer
+        DESCRIPTION. Costo del producto
+    dinero : integer
+        DESCRIPTION. Dinero que paga el cliente
+
+    Returns
+    -------
+    list
+        lista de cantidad de billetes de 50,20,10,5,2,1 en ese orden que hay
+        que dar de vuelto
+
+    """
     vuelto = dinero-precio 
+    print(vuelto)
     vuelto_restante = dinero-precio
     contar_50 = 0
     contar_20 = 0
@@ -28,6 +45,7 @@ def vuelto(precio, dinero):
         if (vuelto_restante//20!= 0):
             contar_20 = vuelto_restante//20
             vuelto_restante = vuelto_restante-20*contar_20
+            print(vuelto_restante)
             if (vuelto_restante//10!= 0):
                 contar_10 = vuelto_restante//10
                 vuelto_restante = vuelto_restante-10*contar_10
@@ -40,7 +58,10 @@ def vuelto(precio, dinero):
                         if (vuelto_restante==1):
                             contar_1 = vuelto_restante
                            # vuelto_restante = vuelto_restante-contar_1
-    elif (vuelto_restante//20!= 0):
+                          
+    #print(vuelto_restante)
+    
+    if (vuelto_restante//20!= 0):
         contar_20 = vuelto_restante//20
         vuelto_restante = vuelto_restante-20*contar_20
         if (vuelto_restante//10!= 0):
@@ -55,9 +76,13 @@ def vuelto(precio, dinero):
                     if (vuelto_restante== 1):
                         contar_1 = vuelto_restante
                        # vuelto_restante = vuelto_restante-contar_1
-    elif (vuelto_restante//10!= 0):
+     
+    #print(vuelto_restante)
+                        
+    if (vuelto_restante//10!= 0):
         contar_10 = vuelto_restante//10
         vuelto_restante = vuelto_restante-10*contar_10
+        print(vuelto_restante)
         if (vuelto_restante//5!= 0):
             contar_5 = vuelto_restante//5
             vuelto_restante = vuelto_restante-5*contar_5
@@ -66,8 +91,9 @@ def vuelto(precio, dinero):
                 vuelto_restante = vuelto_restante-2*contar_2
                 if (vuelto_restante==1):
                     contar_1 = vuelto_restante
-                  #  vuelto_restante = vuelto_restante-contar_1
-    elif (vuelto_restante//5!= 0):
+    
+   # print(vuelto_restante)
+    if (vuelto_restante//5!= 0):
         contar_5 = vuelto_restante//5
         vuelto_restante = vuelto_restante-5*contar_5
         if (vuelto_restante//2!= 0):
@@ -75,8 +101,9 @@ def vuelto(precio, dinero):
             vuelto_restante = vuelto_restante-2*contar_2
             if (vuelto_restante== 1):
                 contar_1 = vuelto_restante
-               # vuelto_restante = vuelto_restante-contar_1
-    elif (vuelto_restante//2!= 0):
+    
+   # print(vuelto_restante)
+    if (vuelto_restante//2!= 0):
         contar_2 = vuelto_restante//2
         vuelto_restante = vuelto_restante-2*contar_2
         if (vuelto_restante==1):
@@ -87,9 +114,8 @@ def vuelto(precio, dinero):
      #   vuelto_restante = vuelto_restante-contar_1
 
     return [contar_50, contar_20, contar_10, contar_5, contar_2, contar_1]   
-        
 
-print(vuelto(230,300))
+#print(vuelto(232,290)) # no funciona bien
         
     
     
