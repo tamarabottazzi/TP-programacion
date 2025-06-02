@@ -5,9 +5,9 @@ Created on Wed May 28 19:47:26 2025
 @author: tamar
 """
 
-romano1 = ["M","D","X","C","I","X" ]
-romano2 = ["M","C","M","X","C","V","I","I","I" ]
-romano3 = ["M","C","D","X","L","I","V" ]
+romano1 = "MDXCIX"
+romano2 = "MCMXCVIII"
+romano3 = "MCDXLIV"
 
 def arabigo(romano):
     """    
@@ -76,13 +76,13 @@ def arabigo(romano):
             resta -= 2
     
     arabe = miles+ centenas+ decenas+ unidades+ resta
-    print(miles, centenas, decenas, unidades, resta)
+   # print(miles, centenas, decenas, unidades, resta)
     
          
     return arabe
 
-#print(arabigo(romano1))
-#print(arabigo(romano2))
+print(arabigo(romano1))
+print(arabigo(romano2))
 print(arabigo(romano3))
 
         
