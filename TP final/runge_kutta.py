@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun  1 12:52:49 2025
+Created on Wed Jun  4 17:07:33 2025
 
 @author: tamar
 """
@@ -22,7 +22,7 @@ def func(x,y): #ingresar la función f(x,y)
     return f
 
 
-def euler(x_inicial,y_inicial,x_final,paso):
+def rungekutta(x_inicial,y_inicial,x_final,paso):
     """
     Parameters
     ----------
@@ -49,16 +49,15 @@ def euler(x_inicial,y_inicial,x_final,paso):
     
     for i in range(1,total_pasos):
         par_xy[i,0] += x_inicial+ paso*i 
-        par_xy[i,1] += par_xy[i-1,1]+func(par_xy[i-1,0], par_xy[i-1,1])*paso
- #       print(func(par_xy[i-1,0], par_xy[i-1,0]))
+        k1 = func(par_xy[i-1,0], par_xy[i-1,1])
+        k2 = func(par_xy[i-1,0]+paso/2, par_xy[i-1,1]+k1*paso/2)
+        k3 = func(par_xy[i-1,0]+paso/2, par_xy[i-1,1]+k2*paso/2)
+        k4 = func(par_xy[i-1,0]+paso, par_xy[i-1,1]+k3*paso)        
+        par_xy[i,1] += par_xy[i-1,1]+(k1+k2+k3+k4)*paso/6
+        
     return par_xy
 
-# pares = euler(x0,y0,x1,h)
+# pares = rungekutta(x0,y0,x1,h)
 
 # print(pares)
 
-
-        
-    
-    
-    
