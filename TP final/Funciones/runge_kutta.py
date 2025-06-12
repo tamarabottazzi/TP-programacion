@@ -53,7 +53,7 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
         k2 = func(par_xy[i-1,0]+paso/2, par_xy[i-1,1]+k1*paso/2)
         k3 = func(par_xy[i-1,0]+paso/2, par_xy[i-1,1]+k2*paso/2)
         k4 = func(par_xy[i-1,0]+paso, par_xy[i-1,1]+k3*paso)        
-        par_xy[i,1] += par_xy[i-1,1]+(k1+k2+k3+k4)*paso/6
+        par_xy[i,1] += par_xy[i-1,1]+(k1+2*k2+2*k3+k4)*paso/6
         
     return par_xy
 

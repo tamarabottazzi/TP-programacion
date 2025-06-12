@@ -1,0 +1,12 @@
+Instrucciones de uso:
+
+Abrir el archivo "TP"
+
+Tuvimos que poner todas las funciones en el mismo archivo para que puedan recibir la función que ingresa el ususario
+
+
+Funciones de prueba: 
+1) y'= 2*x+y 
+2) y'= 2*x**2+3*y
+3) y'= 1/(x+1)
+4) y'= ((x+2)/(x+1))*y
