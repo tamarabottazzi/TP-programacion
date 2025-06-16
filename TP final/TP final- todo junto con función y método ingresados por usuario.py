@@ -5,13 +5,17 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Prueba 2: 
-    # 1) datos fijos de entrada: x0,y0
-    # 2) f(x,y) = xy+y
-    # 3) 3 métodos
-    # 4) No imprime la tabla excel
-    # 5) Prueba la verificación de las condiciones que tienen que cumplir
-    # xf y h.
+# Trabajo final:
+    
+# Crear una función que permita obtener la solución numérica de una ecuación 
+# diferencial de 1er orden usando el método de Euler:
+    
+# Mejorar el método aplicando Euler Mejorado y Runge Kutta de orden 4
+
+# Comparar gráfica y analíticamente las soluciones obtenidas y otras dadas 
+# por paquetes o la solución exacta en el caso de que se tenga
+
+# Entrega con archivos de prueba
 
 
 import numpy as np
@@ -19,22 +23,16 @@ import numpy as np
 # Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = 2
-y0 = 1
-# x0 = float(input('Ingrese valor inicial x0: '))
-# y0 = float(input('Ingrese valor inicial y0: '))
+# x0 = 2
+# y0 = 1
+x0 = float(input('Ingrese valor inicial x0: '))
+y0 = float(input('Ingrese valor inicial y0: '))
 
 # Ingresar datos del paso y del x final:
-# xf = 3 # Valor final 
-# h = 0.1 # Paso 
-xf = float(input('Ingrese valor final xf (mayor a x0) : '))
-h = float(input('Ingrese el paso h (menor a xf-x0): '))
-# Chequeo de las condiciones iniciales:
-if (xf<=x0):
-   xf = float(input('xf no es menor a x0, ingrese otro xf que sea menor a x0: ')) 
-
-if (h>xf-x0):
-    h = float(input('Ingrese otro paso h menor a xf-x0: '))
+# xf = 3 # Valor final (mayor a x0)
+# h = 0.1 # Paso (menor a xf-x0)
+xf = float(input('Ingrese valor final xf: '))
+h = float(input('Ingrese el paso h: '))
 
 # Ingresar métodos a realizar:
 
@@ -52,8 +50,8 @@ def agregar_strings_a_lista():
             mi_lista.append(string)
     return mi_lista
 
-#metodos = agregar_strings_a_lista()
-metodos = ['euler','euler-mejorado', 'runge-kutta']
+metodos = agregar_strings_a_lista()
+# metodos = ['euler','euler-mejorado', 'runge-kutta']
 
 from sympy import symbols, sympify
 
@@ -61,8 +59,8 @@ from sympy import symbols, sympify
 x, y = symbols('x y')
 
 # Ingresar función como texto:
-# entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-entrada = x*y+y
+entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+#entrada = x*y+y
 
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
@@ -72,6 +70,7 @@ pasos_totales = int((xf-x0)/h)+1
 
 
 # Convertir f a función numérica para usar en el solver:
+
 from sympy.utilities.lambdify import lambdify
 
 f_num = lambdify((x, y), f, 'numpy')
@@ -259,7 +258,7 @@ import pandas as pd
 # Armo dicccionario con los métodos usados y valores hallados:
 
 valores_x = np.zeros(pasos_totales)
-for i in range(1,pasos_totales):
+for i in range(pasos_totales):
     valores_x[i] += x0+ h*i 
     
 
@@ -283,14 +282,14 @@ df =pd.DataFrame(d)
 
 print(df)
 
-# # Preguntar al usuario si quiere armar tabla de excel con valores:
+# Preguntar al usuario si quiere armar tabla de excel con valores:
     
-# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# # Nombre del archivo de Excel donde deseas almacenar los datos
-# nombre_archivo = "datos.xlsx"
+opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# Nombre del archivo de Excel donde deseas almacenar los datos
+nombre_archivo = "datos.xlsx"
 
 
-# if (opcion=="S"):
-#     df.to_excel(nombre_archivo, index=False)
+if (opcion=="S"):
+    df.to_excel(nombre_archivo, index=False)
     
  

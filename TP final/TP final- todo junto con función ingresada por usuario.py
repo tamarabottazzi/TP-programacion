@@ -35,7 +35,6 @@ h = 0.1 # tiene que ser paso para que llegue en pasos enteros
 #x1 = float(input('Ingrese valor final x1:))
 #h = float(input('Ingrese el paso h:))
 
-
 from sympy import symbols, sympify
 
 # Definir las variables
@@ -43,7 +42,7 @@ x, y = symbols('x y')
 
 # Ingresar función como texto
 #entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-entrada = x**y
+entrada = x*y+y
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
 
@@ -51,12 +50,26 @@ f = sympify(entrada)
 
 # Definir la función de la EDO: dy/dx = 2x+y
 # Esto es sólo para comparar las aproximaciones con la sol teórica
-# (si la hibiere)
+# (si la hubiere)
 
 def modelo(x, y):
     
-    return x*y
+    return x*y+y
 
+
+# Solución teórica (si la hubiera):    
+    
+from scipy.integrate import solve_ivp
+
+
+# Condiciones iniciales: y(0) = 1
+sol2 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, 100))
+
+# Solución téorica muestreada sólo en los intervalos necesarios:
+pasos_totales = int((x1-x0)/h)+1
+sol3 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, pasos_totales))
+
+s3 = np.array(sol3.y[0])
 
    
     
@@ -80,7 +93,7 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -111,21 +124,21 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
     par[0,1] += y_inicial
-    yi = 0
-    b = 0
     
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
-        yi = f.subs({x: par[i-1,0], y: par[i-1,1]})
-        b = f.subs({x: par[i,0], y: yi})
-        par[i,1] += par[i-1,1]+(f.subs({x: par[i-1,0], y: par[i-1,1]})+b)*paso/2
-   
+        f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
+        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        f_actual = f.subs({x: par[i,0], y: y_euler})
+        par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
+    
     return par
+
 
 # Función Runge-Kutta:
 def rungekutta(x_inicial,y_inicial,x_final,paso):
@@ -147,7 +160,7 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -163,45 +176,18 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
         
     return par_xy
 
-
-# Llamar a la función Euler y calcular:    
-
-pares_euler = euler(x0,y0,x1,h)
-
-# Llamar a la función Euler mejorada y calcular:
-
-pares_eulermejorado = eulermejorado(x0,y0,x1,h)
-
-# Llamar a la función Runge Kutta y calcular:
-
-pares_rungekutta = rungekutta(x0,y0,x1,h)
-
-# Solución teórica (si la hubiera):    
-    
-from scipy.integrate import solve_ivp
-
-
-# Condiciones iniciales: y(0) = 1
-sol2 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, 100))
-
-# Solución téorica muestreada sólo en los intervalos necesarios:
-pasos_totales = int((x1-x0)/h)+1
-sol3 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, pasos_totales))
-
-s3 = np.array(sol3.y[0])
-
-
-#sol = [4*math.exp(x0+h*i)-2*(x0+h*i)-2 for i in range(int((x1-x0)/h)+1)]
-#s = np.array(sol)    
-#sol_teo = s.reshape(1,int((x1-x0)/h+1))
-
- 
-
 import matplotlib.pyplot as plt
 
+
+# Llamar a la función Euler y calcular:  
+pares_euler = euler(x0,y0,x1,h)
+# Llamar a la función Euler mejorada y calcular:
+pares_eulermejorado = eulermejorado(x0,y0,x1,h)
+# Llamar a la función Runge Kutta y calcular:
+pares_rungekutta = rungekutta(x0,y0,x1,h)
+
 # Graficar todas las soluciones obtenidas en un mismo gráfico
-    
-    
+        
 plt.plot(pares_euler[:,0], pares_euler[:,1],'ro', label = 'Euler')
 plt.plot(pares_eulermejorado[:,0],pares_eulermejorado[:,1],'g^', label = 'Euler mejorado')
 plt.plot(pares_rungekutta[:,0],pares_rungekutta[:,1],'bs', label = 'Runge Kutta K=4')
@@ -210,7 +196,6 @@ plt.plot(sol2.t, sol2.y[0], label = 'Sol. Teórica')
 plt.ylabel('y')
 plt.xlabel('x')
 plt.title("Soluciones numéricas")
-#plt.legend('emrt')
 plt.legend()
 plt.grid(True)       # Muestra la cuadrícula
 

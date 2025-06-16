@@ -5,60 +5,85 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Trabajo final:
-    
-# Crear una función que permita obtener la solución numérica de una ecuación 
-# diferencial de 1er orden usando el método de Euler:
-    
-# Mejorar el método aplicando Euler Mejorado y Runge Kutta de orden 4
-
-# Comparar gráfica y analíticamente las soluciones obtenidas y otras dadas 
-# por paquetes o la solución exacta en el caso de que se tenga
-
-# Entrega con archivos de prueba
+# Prueba 2: 
+    # 1) datos fijos de entrada: x0 (negativo),y0, h más grande
+    # 2) f(x,y) = ((x+2)/(x+1))*y
+    # 3) Prueba la elección de 2 de 3 métodos
+    # 4) No imprime la tabla excel
 
 
 import numpy as np
-#import math
 
-# Ingresar datos de la ecuación diferencial (PVI):    
+# Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = 0
-y0 = 1
-#x0 = float(input('Ingrese valor inicial x0:))
-#y0 = float(input('Ingrese valor inicial y0:))
+x0 = -1
+y0 = 3
+# x0 = float(input('Ingrese valor inicial x0: '))
+# y0 = float(input('Ingrese valor inicial y0: '))
 
 # Ingresar datos del paso y del x final:
-x1 = 1
-h = 0.05 # tiene que ser paso para que llegue en pasos enteros
-#x1 = float(input('Ingrese valor final x1:))
-#h = float(input('Ingrese el paso h:))
+xf = 3 # Valor final (mayor a x0)
+h = 0.4 # Paso (menor a xf-x0)
+# xf = float(input('Ingrese valor final xf: '))
+# h = float(input('Ingrese el paso h: '))
 
+# Ingresar métodos a realizar:
+
+def agregar_strings_a_lista():
+    """
+    Crea una lista pidiendo al usuario que ingrese strings.
+    """
+    num_strings = int(input("¿Cuántos métodos quieres usar? "))
+    mi_lista = []
+    if (num_strings==3):
+        mi_lista = ['euler','euler-mejorado', 'runge-kutta']
+    else: 
+        for i in range(num_strings):
+            string = input(f"Introduce el método número {i+1} euler, euler-mejorado o ""runge-kutta"" : ")
+            mi_lista.append(string)
+    return mi_lista
+
+metodos = agregar_strings_a_lista()
+# metodos = ['euler','euler-mejorado', 'runge-kutta']
 
 from sympy import symbols, sympify
 
 # Definir las variables
 x, y = symbols('x y')
 
-# Ingresar función como texto
-#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-entrada = ((x+2)/(x+1))*y
+# Ingresar función como texto:
+entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+#entrada = x*y+y
+
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
 
+#Pasos totales de los métodos:
+pasos_totales = int((xf-x0)/h)+1
 
 
-# Definir la función de la EDO: dy/dx = 2x+y
-# Esto es sólo para comparar las aproximaciones con la sol teórica
-# (si la hibiere)
+# Convertir f a función numérica para usar en el solver:
+
+from sympy.utilities.lambdify import lambdify
+
+f_num = lambdify((x, y), f, 'numpy')
 
 def modelo(x, y):
     
-    return ((x+2)/(x+1))*y
+    return f_num(x, y)
 
+# Solución teórica (si la hubiera):    
+    
+from scipy.integrate import solve_ivp
 
-   
+# Condiciones iniciales: y(0) = 1
+sol2 = solve_ivp(modelo, [x0, xf], [y0], t_eval=np.linspace(x0, xf, 100))
+
+# Solución téorica muestreada sólo en los intervalos necesarios:
+sol3 = solve_ivp(modelo, [x0, xf], [y0], t_eval=np.linspace(x0, xf, pasos_totales))
+
+s3 = np.array(sol3.y[0])
     
 # Función euler: 
 def euler(x_inicial,y_inicial,x_final,paso):
@@ -80,7 +105,7 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -111,21 +136,21 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
     par[0,1] += y_inicial
-    yi = 0
-    b = 0
     
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
-        yi = f.subs({x: par[i-1,0], y: par[i-1,1]})
-        b = f.subs({x: par[i,0], y: yi})
-        par[i,1] += par[i-1,1]+(f.subs({x: par[i-1,0], y: par[i-1,1]})+b)*paso/2
-   
+        f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
+        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        f_actual = f.subs({x: par[i,0], y: y_euler})
+        par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
+    
     return par
+
 
 # Función Runge-Kutta:
 def rungekutta(x_inicial,y_inicial,x_final,paso):
@@ -147,7 +172,7 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -163,97 +188,102 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
         
     return par_xy
 
-
-# Llamar a la función Euler y calcular:    
-
-pares_euler = euler(x0,y0,x1,h)
-
-# Llamar a la función Euler mejorada y calcular:
-
-pares_eulermejorado = eulermejorado(x0,y0,x1,h)
-
-# Llamar a la función Runge Kutta y calcular:
-
-pares_rungekutta = rungekutta(x0,y0,x1,h)
-
-# Solución teórica (si la hubiera):    
-    
-from scipy.integrate import solve_ivp
-
-
-# Condiciones iniciales: y(0) = 1
-sol2 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, 100))
-
-# Solución téorica muestreada sólo en los intervalos necesarios:
-pasos_totales = int((x1-x0)/h)+1
-sol3 = solve_ivp(modelo, [x0, x1], [y0], t_eval=np.linspace(x0, x1, pasos_totales))
-
-s3 = np.array(sol3.y[0])
-
-
-#sol = [4*math.exp(x0+h*i)-2*(x0+h*i)-2 for i in range(int((x1-x0)/h)+1)]
-#s = np.array(sol)    
-#sol_teo = s.reshape(1,int((x1-x0)/h+1))
-
- 
-
 import matplotlib.pyplot as plt
+from numpy import linalg as LA
 
+# Lista con errores: 
+    
+errores_valor = []
+errores_nombre = []
+
+for metodo in metodos:
+    if (metodo=='euler'):
+        # Llamar a la función Euler y calcular:  
+        pares_euler = euler(x0,y0,xf,h)
+        plt.plot(pares_euler[:,0], pares_euler[:,1],'ro', label = 'Euler')
+        # Calcular error y poner en lista de errores:
+        error_euler = LA.norm(s3-np.array(pares_euler[:, 1]))**2
+        errores_valor.append([error_euler])
+        errores_nombre.append('euler')
+       # valores_euler= pares_euler[:,1]
+    elif (metodo=='euler-mejorado'):
+        # Llamar a la función Euler mejorada y calcular:
+        pares_eulermejorado = eulermejorado(x0,y0,xf,h)
+        plt.plot(pares_eulermejorado[:,0],pares_eulermejorado[:,1],'g^', label = 'Euler mejorado')
+        # Calcular error y poner en lista de errores:
+        error_eulermejorado = LA.norm(s3-np.array(pares_eulermejorado[:, 1]))**2
+        errores_valor.append([error_eulermejorado])
+        errores_nombre.append('euler-mejorado')
+    elif (metodo=='runge-kutta'):
+        # Llamar a la función Runge Kutta, calcular y graficar:
+        pares_rungekutta = rungekutta(x0,y0,xf,h)
+        plt.plot(pares_rungekutta[:,0],pares_rungekutta[:,1],'bs', label = 'Runge Kutta K=4')
+        # Calcular error y poner en lista de errores:
+        error_rungekutta = LA.norm(s3-np.array(pares_rungekutta[:, 1]))**2
+        errores_valor.append([error_rungekutta])
+        errores_nombre.append('runge-kutta')
+
+           
 # Graficar todas las soluciones obtenidas en un mismo gráfico
-    
-    
-plt.plot(pares_euler[:,0], pares_euler[:,1],'ro', label = 'Euler')
-plt.plot(pares_eulermejorado[:,0],pares_eulermejorado[:,1],'g^', label = 'Euler mejorado')
-plt.plot(pares_rungekutta[:,0],pares_rungekutta[:,1],'bs', label = 'Runge Kutta K=4')
-#plt.plot(pares_euler[:,0], s,'r--', label = 'Sol. Teórica')
+        
 plt.plot(sol2.t, sol2.y[0], label = 'Sol. Teórica')
 plt.ylabel('y')
 plt.xlabel('x')
 plt.title("Soluciones numéricas")
-#plt.legend('emrt')
 plt.legend()
 plt.grid(True)       # Muestra la cuadrícula
 
 # Mostrar el gráfico:
 plt.show()
 
-
-
 # Comparar soluciones con norma y cálculo del error:
+    
+minimo = min(errores_valor)
 
-from numpy import linalg as LA
-# Para calcular la norma al cuadrado del vector error: 
-
-error_euler = LA.norm(s3-np.array(pares_euler[:, 1]))**2
-error_eulermejorado = LA.norm(s3-np.array(pares_eulermejorado[:, 1]))**2
-error_rungekutta = LA.norm(s3-np.array(pares_rungekutta[:, 1]))**2
-
-if (error_euler<error_eulermejorado) and (error_euler<error_rungekutta):
-    print('El método que mejor aproxima es Euler con error', error_euler)
-elif (error_eulermejorado< error_euler) and (error_eulermejorado<error_rungekutta):
-    print('El método que mejor aproxima es Euler Mejorado con error', error_eulermejorado)
-elif (error_rungekutta<error_euler) and (error_rungekutta<error_eulermejorado):
-    print('El método que mejor aproxima es Runge Kutta con error', error_rungekutta)
+for i in range(len(errores_valor)):
+    if (errores_valor[i]== minimo):
+        print(f"El método que mejor aproxima es {errores_nombre[i]} con error ", minimo)
 
     
 # Armar tabla de datos comparativa con pandas:
 
 import pandas as pd
 
-d = {"x_i": pares_euler[:,0], "Sol. Teórica": s3, "Euler": pares_euler[:,1], "Euler Mejorado": pares_eulermejorado[:,1], "Runge-Kutta": pares_rungekutta[:,1]}
+# Armo dicccionario con los métodos usados y valores hallados:
+
+valores_x = np.zeros(pasos_totales)
+for i in range(1,pasos_totales):
+    valores_x[i] += x0+ h*i 
+    
+
+clave = ["x_i", "Sol. Teórica"]
+valores = [valores_x, s3 ]
+for i in range(len(metodos)):
+    clave.extend([metodos[i]])
+    if (metodos[i]=='euler'):
+        valores.extend([pares_euler[:,1]])
+    elif (metodos[i]=='euler-mejorado'):
+        valores.extend([pares_eulermejorado[:,1]])
+    elif (metodos[i]=='runge-kutta'):
+        valores.extend([pares_rungekutta[:,1]])
+        
+d = {}
+for i in range(len(clave)):
+    d[clave[i]] = valores[i]
+
 
 df =pd.DataFrame(d)
 
 print(df)
 
-# # Preguntar al usuario si quiere armar tabla de excel con valores:
+# Preguntar al usuario si quiere armar tabla de excel con valores:
     
-# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# # Nombre del archivo de Excel donde deseas almacenar los datos
-# nombre_archivo = "datos.xlsx"
+opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# Nombre del archivo de Excel donde deseas almacenar los datos
+nombre_archivo = "datos.xlsx"
 
 
-# if (opcion=="S"):
-#     df.to_excel(nombre_archivo, index=False)
+if (opcion=="S"):
+    df.to_excel(nombre_archivo, index=False)
     
  

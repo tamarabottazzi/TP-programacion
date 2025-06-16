@@ -1,12 +1,31 @@
 Instrucciones de uso:
 
-Abrir el archivo "TP"
+A- Del código principal:
 
-Tuvimos que poner todas las funciones en el mismo archivo para que puedan recibir la función que ingresa el ususario
+Abrir el archivo "TP..."
+Al ejecutar pedirá:
+1-Valores iniciales: x0, y0 
+2-Valor final: xf (menor a x0)
+3-Paso: h (mayor a 0 y menor a xf-x0)
+4-Función: f(x,y) (se ingresa simbólicamente). Debe ser lineal en y
+5-Métodos: Son tres posibles "euler", "euler-modificado" y "runge-kutta".
+Se ingresan en formato string como parte de una lista, por ejemplo "euler","runge-kutta".
+No es necesario que sean los 3 pero se requiere un mínimo de 1.
+
+Tuvimos que poner todas las funciones en el mismo archivo para que puedan recibir la función que ingresa el usuario
 
 
-Funciones de prueba: 
+Funciones de prueba sugeridas: 
 1) y'= 2*x+y 
 2) y'= 2*x**2+3*y
 3) y'= 1/(x+1)
 4) y'= ((x+2)/(x+1))*y
+
+El archivo .xls que se genera está en la misma carpeta y se sobrescribe cada vez que se ejecuta.
+
+B- Carpeta "Pruebas": 
+Se encuentran todas las pruebas del código con datos fijos de ingreso 
+
+
+
+
