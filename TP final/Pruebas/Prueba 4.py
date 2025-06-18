@@ -5,27 +5,42 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Prueba 1: 
-    # 1) datos fijos de entrada: x0,y0,xf,h
-    # 2) f(x,y) = xy+y
+# Prueba 2: 
+    # 1) datos fijos de entrada: x0 ,y0, xf (los 3 negativos) y h (más chico) 
+    # 2) f(x,y) = 1/(x+2), x0 cerca de la región de indeterminación de f
     # 3) 3 métodos
-    # 4) No imprime la tabla excel
+    # 4) Prueba de imprimir la tabla excel
 
 
 import numpy as np
 
-# Ingresar datos de la ecuación diferencial (PVI):    
+# Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = 2
-y0 = 1
+x0 = -1.8
+y0 = -2
 
 # Ingresar datos del paso y del x final:
-xf = 3 
-h = 0.1 
+xf = -1 # Valor final (mayor a x0)
+h = 0.05 # Paso (menor a xf-x0)
 
 # Ingresar métodos a realizar:
 
+# def agregar_strings_a_lista():
+#     """
+#     Crea una lista pidiendo al usuario que ingrese strings.
+#     """
+#     num_strings = int(input("¿Cuántos métodos quieres usar? "))
+#     mi_lista = []
+#     if (num_strings==3):
+#         mi_lista = ['euler','euler-mejorado', 'runge-kutta']
+#     else: 
+#         for i in range(num_strings):
+#             string = input(f"Introduce el método número {i+1} euler, euler-mejorado o ""runge-kutta"" : ")
+#             mi_lista.append(string)
+#     return mi_lista
+
+# metodos = agregar_strings_a_lista()
 metodos = ['euler','euler-mejorado', 'runge-kutta']
 
 from sympy import symbols, sympify
@@ -33,8 +48,10 @@ from sympy import symbols, sympify
 # Definir las variables
 x, y = symbols('x y')
 
-# Ingresar función como texto
-entrada = x*y+y
+# Ingresar función como texto:
+#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+entrada = 1/(x+2)
+
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
 
@@ -43,13 +60,10 @@ pasos_totales = int((xf-x0)/h)+1
 
 
 # Convertir f a función numérica para usar en el solver:
+
 from sympy.utilities.lambdify import lambdify
 
 f_num = lambdify((x, y), f, 'numpy')
-
-# Definir la función de la EDO: dy/dx = 2x+y
-# Esto es sólo para comparar las aproximaciones con la sol teórica
-# (si la hubiere)
 
 def modelo(x, y):
     
@@ -258,14 +272,14 @@ df =pd.DataFrame(d)
 
 print(df)
 
-# # Preguntar al usuario si quiere armar tabla de excel con valores:
+# Preguntar al usuario si quiere armar tabla de excel con valores:
     
-# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# # Nombre del archivo de Excel donde deseas almacenar los datos
-# nombre_archivo = "datos.xlsx"
+opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# Nombre del archivo de Excel donde deseas almacenar los datos
+nombre_archivo = "datos.xlsx"
 
 
-# if (opcion=="S"):
-#     df.to_excel(nombre_archivo, index=False)
+if (opcion=="S"):
+    df.to_excel(nombre_archivo, index=False)
     
  

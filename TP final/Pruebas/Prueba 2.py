@@ -7,7 +7,7 @@ Created on Wed Jun 11 19:55:56 2025
 
 # Prueba 2: 
     # 1) datos fijos de entrada: x0,y0
-    # 2) f(x,y) = xy+y
+    # 2) f(x,y) = x*y+y
     # 3) 3 métodos
     # 4) No imprime la tabla excel
     # 5) Prueba la verificación de las condiciones que tienen que cumplir
@@ -21,20 +21,18 @@ import numpy as np
 # Ingresar valores iniciales(x0,y0) =
 x0 = 2
 y0 = 1
-# x0 = float(input('Ingrese valor inicial x0: '))
-# y0 = float(input('Ingrese valor inicial y0: '))
 
 # Ingresar datos del paso y del x final:
-# xf = 3 # Valor final 
-# h = 0.1 # Paso 
-xf = float(input('Ingrese valor final xf (mayor a x0) : '))
-h = float(input('Ingrese el paso h (menor a xf-x0): '))
-# Chequeo de las condiciones iniciales:
-if (xf<=x0):
-   xf = float(input('xf no es menor a x0, ingrese otro xf que sea menor a x0: ')) 
+    
+xf = float(input(f"Ingrese valor final xf (mayor a {x0}) : "))
+# Chequeo del xf ingresado
+while (xf<=x0): 
+   xf = float(input(f"xf no es menor a x0, ingrese otro xf que sea mayor a x0={x0}: ")) 
 
-if (h>xf-x0):
-    h = float(input('Ingrese otro paso h menor a xf-x0: '))
+h = float(input(f"Ingrese el paso h (menor a xf-x0= {xf-x0}): " ))
+# Chequeo del h ingresado:
+while (h>xf-x0):
+    h = float(input(f"h no es menor a xf-x0= {xf-x0}, ingrese otro h< {xf-x0}: "))
 
 # Ingresar métodos a realizar:
 
@@ -60,8 +58,6 @@ from sympy import symbols, sympify
 # Definir las variables
 x, y = symbols('x y')
 
-# Ingresar función como texto:
-# entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
 entrada = x*y+y
 
 # Convertir el texto en expresión simbólica

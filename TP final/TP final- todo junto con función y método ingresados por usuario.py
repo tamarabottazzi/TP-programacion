@@ -7,15 +7,16 @@ Created on Wed Jun 11 19:55:56 2025
 
 # Trabajo final:
     
-# Crear una función que permita obtener la solución numérica de una ecuación 
-# diferencial de 1er orden usando el método de Euler:
-    
-# Mejorar el método aplicando Euler Mejorado y Runge Kutta de orden 4
+# Crear un programa que permita obtener la solución numérica de una ecuación 
+# diferencial de 1er orden usando los métodos de Euler, Euler Mejorado y 
+# Runge Kutta de orden 4.
 
-# Comparar gráfica y analíticamente las soluciones obtenidas y otras dadas 
-# por paquetes o la solución exacta en el caso de que se tenga
+# Comparar gráfica y analíticamente las soluciones obtenidas y la solución
+# que da el módulo ScyPy (casi teórica).
 
-# Entrega con archivos de prueba
+# Imprimir tabla de datos y exportar a un excel.
+
+# Entrega con archivos de prueba (en carpeta aparte).
 
 
 import numpy as np
@@ -28,11 +29,18 @@ import numpy as np
 x0 = float(input('Ingrese valor inicial x0: '))
 y0 = float(input('Ingrese valor inicial y0: '))
 
-# Ingresar datos del paso y del x final:
+# Ingresar datos del paso h y del x final:
 # xf = 3 # Valor final (mayor a x0)
 # h = 0.1 # Paso (menor a xf-x0)
-xf = float(input('Ingrese valor final xf: '))
-h = float(input('Ingrese el paso h: '))
+xf = float(input(f"Ingrese valor final xf (mayor a {x0}) : "))
+# Chequeo del xf ingresado
+while (xf<=x0): 
+   xf = float(input(f"xf no es menor a x0, ingrese otro xf que sea mayor a x0={x0}: ")) 
+
+h = float(input(f"Ingrese el paso h (menor a xf-x0= {xf-x0}): " ))
+# Chequeo del h ingresado:
+while (h>xf-x0):
+    h = float(input(f"h no es menor a xf-x0= {xf-x0}, ingrese otro h< {xf-x0}: "))
 
 # Ingresar métodos a realizar:
 

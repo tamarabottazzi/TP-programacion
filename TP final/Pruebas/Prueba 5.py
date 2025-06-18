@@ -7,7 +7,7 @@ Created on Wed Jun 11 19:55:56 2025
 
 # Prueba 1: 
     # 1) datos fijos de entrada: x0,y0,xf,h
-    # 2) f(x,y) = xy+y
+    # 2) Prueba de ingreso por usuario de f(x,y) 
     # 3) 3 métodos
     # 4) No imprime la tabla excel
 
@@ -34,7 +34,7 @@ from sympy import symbols, sympify
 x, y = symbols('x y')
 
 # Ingresar función como texto
-entrada = x*y+y
+entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
 

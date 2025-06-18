@@ -6,9 +6,9 @@ Created on Wed Jun 11 19:55:56 2025
 """
 
 # Prueba 2: 
-    # 1) datos fijos de entrada: x0 (negativo),y0, h más grande
+    # 1) datos fijos de entrada: x0,y0, xf y h (más grande)
     # 2) f(x,y) = ((x+2)/(x+1))*y
-    # 3) Prueba la elección de 2 de 3 métodos
+    # 3) Prueba de la elección de los métodos
     # 4) No imprime la tabla excel
 
 
@@ -17,16 +17,12 @@ import numpy as np
 # Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = -1
+x0 = 1
 y0 = 3
-# x0 = float(input('Ingrese valor inicial x0: '))
-# y0 = float(input('Ingrese valor inicial y0: '))
 
 # Ingresar datos del paso y del x final:
-xf = 3 # Valor final (mayor a x0)
+xf = 4 # Valor final (mayor a x0)
 h = 0.4 # Paso (menor a xf-x0)
-# xf = float(input('Ingrese valor final xf: '))
-# h = float(input('Ingrese el paso h: '))
 
 # Ingresar métodos a realizar:
 
@@ -53,8 +49,8 @@ from sympy import symbols, sympify
 x, y = symbols('x y')
 
 # Ingresar función como texto:
-entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-#entrada = x*y+y
+#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+entrada = ((x+2)/(x+1))*y
 
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
@@ -276,14 +272,14 @@ df =pd.DataFrame(d)
 
 print(df)
 
-# Preguntar al usuario si quiere armar tabla de excel con valores:
+# # Preguntar al usuario si quiere armar tabla de excel con valores:
     
-opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# Nombre del archivo de Excel donde deseas almacenar los datos
-nombre_archivo = "datos.xlsx"
+# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# # Nombre del archivo de Excel donde deseas almacenar los datos
+# nombre_archivo = "datos.xlsx"
 
 
-if (opcion=="S"):
-    df.to_excel(nombre_archivo, index=False)
+# if (opcion=="S"):
+#     df.to_excel(nombre_archivo, index=False)
     
  
