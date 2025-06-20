@@ -10,9 +10,15 @@ Created on Wed Jun 11 19:55:56 2025
     # 2) f(x,y) = xy+y
     # 3) 3 métodos
     # 4) No imprime la tabla excel
+    # 5) Calcula tiempo total del algoritmo
 
 
 import numpy as np
+
+import time
+
+start_time = time.time()
+
 
 # Ingresar datos de la ecuación diferencial (PVI):    
 
@@ -87,7 +93,6 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -118,7 +123,6 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
@@ -127,7 +131,7 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
         f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
-        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        y_euler = par[i-1,1]+paso*(f_anterior) #euler para yi actual
         f_actual = f.subs({x: par[i,0], y: y_euler})
         par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
     
@@ -154,7 +158,6 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -234,7 +237,7 @@ import pandas as pd
 # Armo dicccionario con los métodos usados y valores hallados:
 
 valores_x = np.zeros(pasos_totales)
-for i in range(1,pasos_totales):
+for i in range(pasos_totales):
     valores_x[i] += x0+ h*i 
     
 
@@ -258,6 +261,9 @@ df =pd.DataFrame(d)
 
 print(df)
 
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Tiempo de ejecución: {elapsed_time:.5f} segundos")
 # # Preguntar al usuario si quiere armar tabla de excel con valores:
     
 # opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 

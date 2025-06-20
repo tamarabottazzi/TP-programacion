@@ -1,0 +1,46 @@
+Instrucciones de uso y detalles de las carpetas y archivos contenidos en la carpeta TP-final-Bottazzi:
+
+A- Del programa principal:
+
+Abrir el archivo "TP final-resol-num-ec-dif"
+Al ejecutar pedirá:
+1-Valores iniciales: x0, y0 
+2-Valor final: xf (menor a x0) (chequea esta condición el programa y no se avanza hasta que la satisface)
+3-Paso: h (mayor a 0 y menor a xf-x0)
+4-Función: f(x,y) (se ingresa simbólicamente). Debe ser lineal en y (no potencias de y)
+5-Métodos: se ingresa primero la cantidad de métodos (1,2 ó 3). 
+	5-1 Si se pone 3 no deben escribirse los métodos (son todos). 
+	5-2 Si se pone 1 ó 2, pedirá luego los nombres de cada método uno por uno, entre "euler", "euler-modificado" y "runge-	kutta".
+	5-3 Se ingresan en formato string, por ejemplo euler (sin comillas).
+	5-4 No es necesario que sean los 3 pero se requiere un mínimo de 1.
+
+Tuvimos que poner todas las funciones en el mismo archivo para que puedan recibir la función que ingresa el usuario
+
+
+Funciones de prueba sugeridas: 
+1) y'= 2*x+y 
+2) y'= 2*x**2+3*y
+3) y'= 1/(x+1)
+4) y'= ((x+2)/(x+1))*y
+5) y'= 6*x-7*y  
+algunas de estas ya fueron usadas en los archivos de prueba.
+
+- Por default siempre va a ejecutar además la solución, que da el módulo Scy-Py, que tomamos como la solución "cuasi-téorica",
+
+- Sobre la tabla de datos: 
+	Se genera automáticamente una tabla tipo dataframe en python con pandas.
+	Además pregunta si se desea exportar la tabla a un archivo excel (.xls), se debe responder por sí o no (S/N)
+	El archivo .xls que se genera está en la misma carpeta y se sobrescribe cada vez que se ejecuta.
+
+B- Carpeta "Pruebas": 
+	1. Hay 6 archivos de pruebas en los que se chequean distintos paramétros, partes del código, funciones, condiciones iniciales, etc. 
+	2. Al abrir cada archivo se encuentran las características principales que se prueban.
+B- Carpeta "Funciones":
+	1. Hay 3 archivos: cada uno tiene la función del método indicado en el nombre del archivo.
+	2. También tiene una función de prueba.
+	3. Está habilitado el control del tiempo de cada función.
+	4. Se puede correr para chequear. 
+
+
+
+

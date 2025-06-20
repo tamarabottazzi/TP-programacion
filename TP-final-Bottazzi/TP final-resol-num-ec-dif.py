@@ -5,11 +5,18 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Prueba 2: 
-    # 1) datos fijos de entrada: x0,y0, xf y h (más grande)
-    # 2) f(x,y) = ((x+2)/(x+1))*y
-    # 3) Prueba de la elección de los métodos
-    # 4) No imprime la tabla excel
+# Trabajo final:
+    
+# Crear un programa que permita obtener la solución numérica de una ecuación 
+# diferencial de 1er orden usando los métodos de Euler, Euler Mejorado y 
+# Runge Kutta de orden 4.
+
+# Comparar gráfica y analíticamente las soluciones obtenidas y la solución
+# que da el módulo ScyPy (casi teórica).
+
+# Imprimir tabla de datos y exportar a un excel.
+
+# Entrega con archivos de prueba (en carpeta aparte).
 
 
 import numpy as np
@@ -17,12 +24,23 @@ import numpy as np
 # Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = 1
-y0 = 3
+# x0 = 2
+# y0 = 1
+x0 = float(input('Ingrese valor inicial x0: '))
+y0 = float(input('Ingrese valor inicial y0: '))
 
-# Ingresar datos del paso y del x final:
-xf = 4 # Valor final (mayor a x0)
-h = 0.4 # Paso (menor a xf-x0)
+# Ingresar datos del paso h y del x final:
+# xf = 3 # Valor final (mayor a x0)
+# h = 0.1 # Paso (menor a xf-x0)
+xf = float(input(f"Ingrese valor final xf (mayor a {x0}) : "))
+# Chequeo del xf ingresado
+while (xf<=x0): 
+   xf = float(input(f"xf no es menor a x0, ingrese otro xf que sea mayor a x0={x0}: ")) 
+
+h = float(input(f"Ingrese el paso h (menor a xf-x0= {xf-x0}): " ))
+# Chequeo del h ingresado:
+while (h>xf-x0):
+    h = float(input(f"h no es menor a xf-x0= {xf-x0}, ingrese otro h< {xf-x0}: "))
 
 # Ingresar métodos a realizar:
 
@@ -49,8 +67,8 @@ from sympy import symbols, sympify
 x, y = symbols('x y')
 
 # Ingresar función como texto:
-#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-entrada = ((x+2)/(x+1))*y
+entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+#entrada = x*y+y
 
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
@@ -101,7 +119,6 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -132,7 +149,6 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
@@ -141,7 +157,7 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
         f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
-        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        y_euler = par[i-1,1]+paso*(f_anterior)#euler para yi actual
         f_actual = f.subs({x: par[i,0], y: y_euler})
         par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
     
@@ -168,7 +184,6 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -248,7 +263,7 @@ import pandas as pd
 # Armo dicccionario con los métodos usados y valores hallados:
 
 valores_x = np.zeros(pasos_totales)
-for i in range(1,pasos_totales):
+for i in range(pasos_totales):
     valores_x[i] += x0+ h*i 
     
 
@@ -272,14 +287,14 @@ df =pd.DataFrame(d)
 
 print(df)
 
-# # Preguntar al usuario si quiere armar tabla de excel con valores:
+# Preguntar al usuario si quiere armar tabla de excel con valores:
     
-# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# # Nombre del archivo de Excel donde deseas almacenar los datos
-# nombre_archivo = "datos.xlsx"
+opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# Nombre del archivo de Excel donde deseas almacenar los datos
+nombre_archivo = "datos.xlsx"
 
 
-# if (opcion=="S"):
-#     df.to_excel(nombre_archivo, index=False)
+if (opcion=="S"):
+    df.to_excel(nombre_archivo, index=False)
     
  

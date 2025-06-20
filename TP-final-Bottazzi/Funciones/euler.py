@@ -1,27 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun  1 12:52:49 2025
+Created on Thu Jun 19 17:46:46 2025
 
 @author: tamar
 """
 
 import numpy as np
 
-# x0 = 0
-# y0 = 2
-# x1 = 1
+from sympy import symbols, sympify
 
-# h = 0.1 # tiene que ser paso para que llegue en pasos enteros
+import time
 
+start_time = time.time()
 
+# Definir las variables
+x, y = symbols('x y')
 
-def func(x,y): #ingresar la función f(x,y)
+# Ingresar función como texto:
+#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+entrada = x*y+y
 
-    f = 2*x+y
+# Convertir el texto en expresión simbólica
+f = sympify(entrada)
 
-    return f
-
-
+# Función euler: 
 def euler(x_inicial,y_inicial,x_final,paso):
     """
     Parameters
@@ -41,7 +43,6 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -49,16 +50,9 @@ def euler(x_inicial,y_inicial,x_final,paso):
     
     for i in range(1,total_pasos):
         par_xy[i,0] += x_inicial+ paso*i 
-        par_xy[i,1] += par_xy[i-1,1]+func(par_xy[i-1,0], par_xy[i-1,1])*paso
- #       print(func(par_xy[i-1,0], par_xy[i-1,0]))
+        par_xy[i,1] += par_xy[i-1,1]+f.subs({x: par_xy[i-1,0], y: par_xy[i-1,1]})*paso
     return par_xy
 
-# pares = euler(x0,y0,x1,h)
-
-# print(pares)
-
-
-        
-    
-    
-    
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Tiempo de ejecución: {elapsed_time:.10f} segundos")

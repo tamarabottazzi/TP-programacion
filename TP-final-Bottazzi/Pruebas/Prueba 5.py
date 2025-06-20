@@ -5,11 +5,13 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Prueba 1: 
+# Prueba 5: 
     # 1) datos fijos de entrada: x0,y0,xf,h
     # 2) Prueba de ingreso por usuario de f(x,y) 
     # 3) 3 métodos
     # 4) No imprime la tabla excel
+    # 5) Mide tiempo de armado de la solución con el módulo Scy-Py
+    
 
 
 import numpy as np
@@ -41,6 +43,10 @@ f = sympify(entrada)
 #Pasos totales de los métodos:
 pasos_totales = int((xf-x0)/h)+1
 
+import time
+
+# Tiempo en preparar la f y calcular solución por scy py:
+start_time = time.time()
 
 # Convertir f a función numérica para usar en el solver:
 from sympy.utilities.lambdify import lambdify
@@ -66,6 +72,10 @@ sol2 = solve_ivp(modelo, [x0, xf], [y0], t_eval=np.linspace(x0, xf, 100))
 sol3 = solve_ivp(modelo, [x0, xf], [y0], t_eval=np.linspace(x0, xf, pasos_totales))
 
 s3 = np.array(sol3.y[0])
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+
     
 # Función euler: 
 def euler(x_inicial,y_inicial,x_final,paso):
@@ -118,7 +128,6 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
@@ -127,7 +136,7 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
         f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
-        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        y_euler = par[i-1,1]+paso*(f_anterior)#euler para yi actual
         f_actual = f.subs({x: par[i,0], y: y_euler})
         par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
     
@@ -234,7 +243,7 @@ import pandas as pd
 # Armo dicccionario con los métodos usados y valores hallados:
 
 valores_x = np.zeros(pasos_totales)
-for i in range(1,pasos_totales):
+for i in range(pasos_totales):
     valores_x[i] += x0+ h*i 
     
 
@@ -257,6 +266,9 @@ for i in range(len(clave)):
 df =pd.DataFrame(d)
 
 print(df)
+
+print(f"Tiempo de búsqueda de solución por Scy-Py: {elapsed_time:.5f} segundos")
+
 
 # # Preguntar al usuario si quiere armar tabla de excel con valores:
     

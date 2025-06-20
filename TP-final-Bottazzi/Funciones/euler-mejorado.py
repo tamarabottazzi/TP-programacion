@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jun  2 10:30:53 2025
+Created on Thu Jun 19 17:46:46 2025
 
 @author: tamar
 """
 
 import numpy as np
 
-#import euler
+from sympy import symbols, sympify
+
+import time
+
+start_time = time.time()
 
 
-# x0 = 0
-# y0 = 2
-# x1 = 1
+# Definir las variables
+x, y = symbols('x y')
 
-# h = 0.1 # tiene que ser paso para que llegue en pasos enteros
+# Ingresar función como texto:
+#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+entrada = x*y+y
 
+# Convertir el texto en expresión simbólica
+f = sympify(entrada)
 
-
-def func(x,y): #ingresar la función f(x,y)
-
-    f = 2*x+y
-
-    return f
-
-
+# Función euler mejorado: 
 def eulermejorado(x_inicial,y_inicial,x_final,paso):
     """
     Parameters
@@ -44,21 +44,23 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    print(total_pasos)
+    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
     par[0,1] += y_inicial
-    f = 0
     
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
-        f = func(par[i,0], func(par[i-1,0],par[i-1,1]))
-        par[i,1] += par[i-1,1]+(func(par[i-1,0], par[i-1,1])+f)*paso/2
-   
+        f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
+        y_euler = par[i-1,1]+paso*(f_anterior)#euler para yi actual
+        f_actual = f.subs({x: par[i,0], y: y_euler})
+        par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
+    
     return par
 
-# pares = eulermejorado(x0,y0,x1,h)
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Tiempo de ejecución: {elapsed_time:.10f} segundos")
 
-# print(pares)
 

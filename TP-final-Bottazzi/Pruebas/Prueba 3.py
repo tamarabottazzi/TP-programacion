@@ -5,13 +5,12 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Prueba 2: 
-    # 1) datos fijos de entrada: x0,y0
-    # 2) f(x,y) = x*y+y
-    # 3) 3 métodos
+# Prueba 3: 
+    # 1) datos fijos de entrada: x0,y0, xf y h (más grande)
+    # 2) f(x,y) = ((x+2)/(x+1))*y
+    # 3) Prueba de la elección de los métodos
     # 4) No imprime la tabla excel
-    # 5) Prueba la verificación de las condiciones que tienen que cumplir
-    # xf y h.
+    # 5) Tiempo de ejecución desde después que se ingresan los métodos
 
 
 import numpy as np
@@ -19,20 +18,12 @@ import numpy as np
 # Ingresar datos de la ecuación diferencial (PVI):   
 
 # Ingresar valores iniciales(x0,y0) =
-x0 = 2
-y0 = 1
+x0 = 1
+y0 = 3
 
 # Ingresar datos del paso y del x final:
-    
-xf = float(input(f"Ingrese valor final xf (mayor a {x0}) : "))
-# Chequeo del xf ingresado
-while (xf<=x0): 
-   xf = float(input(f"xf no es menor a x0, ingrese otro xf que sea mayor a x0={x0}: ")) 
-
-h = float(input(f"Ingrese el paso h (menor a xf-x0= {xf-x0}): " ))
-# Chequeo del h ingresado:
-while (h>xf-x0):
-    h = float(input(f"h no es menor a xf-x0= {xf-x0}, ingrese otro h< {xf-x0}: "))
+xf = 4 # Valor final (mayor a x0)
+h = 0.4 # Paso (menor a xf-x0)
 
 # Ingresar métodos a realizar:
 
@@ -50,15 +41,23 @@ def agregar_strings_a_lista():
             mi_lista.append(string)
     return mi_lista
 
-#metodos = agregar_strings_a_lista()
-metodos = ['euler','euler-mejorado', 'runge-kutta']
+metodos = agregar_strings_a_lista()
+# metodos = ['euler','euler-mejorado', 'runge-kutta']
+
+import time
+
+# Tiempo de ejecución desde acá:
+start_time = time.time()
+
 
 from sympy import symbols, sympify
 
 # Definir las variables
 x, y = symbols('x y')
 
-entrada = x*y+y
+# Ingresar función como texto:
+#entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
+entrada = ((x+2)/(x+1))*y
 
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
@@ -68,6 +67,7 @@ pasos_totales = int((xf-x0)/h)+1
 
 
 # Convertir f a función numérica para usar en el solver:
+
 from sympy.utilities.lambdify import lambdify
 
 f_num = lambdify((x, y), f, 'numpy')
@@ -148,7 +148,7 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
         f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
-        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        y_euler = par[i-1,1]+paso*(f_anterior)#euler para yi actual
         f_actual = f.subs({x: par[i,0], y: y_euler})
         par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
     
@@ -255,7 +255,7 @@ import pandas as pd
 # Armo dicccionario con los métodos usados y valores hallados:
 
 valores_x = np.zeros(pasos_totales)
-for i in range(1,pasos_totales):
+for i in range(pasos_totales):
     valores_x[i] += x0+ h*i 
     
 
@@ -278,6 +278,11 @@ for i in range(len(clave)):
 df =pd.DataFrame(d)
 
 print(df)
+
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"Tiempo de ejecución: {elapsed_time:.5f} segundos")
+
 
 # # Preguntar al usuario si quiere armar tabla de excel con valores:
     

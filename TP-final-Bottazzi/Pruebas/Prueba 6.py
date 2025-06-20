@@ -5,70 +5,37 @@ Created on Wed Jun 11 19:55:56 2025
 @author: tamar
 """
 
-# Trabajo final:
-    
-# Crear un programa que permita obtener la solución numérica de una ecuación 
-# diferencial de 1er orden usando los métodos de Euler, Euler Mejorado y 
-# Runge Kutta de orden 4.
-
-# Comparar gráfica y analíticamente las soluciones obtenidas y la solución
-# que da el módulo ScyPy (casi teórica).
-
-# Imprimir tabla de datos y exportar a un excel.
-
-# Entrega con archivos de prueba (en carpeta aparte).
+# Prueba 6: 
+    # 1) datos fijos de entrada: x0,y0,xf,h
+    # 2) f(x,y) = x*y^2 ()no lineal en y)
+    # 3) 3 métodos
+    # 4) el método del módulo Scypy no aproxima bien en todo el intervalo (por no ser lineal), así 
+    # que se recorta la iteración hasta el paso 5 para poder comparar.
 
 
 import numpy as np
 
-# Ingresar datos de la ecuación diferencial (PVI):   
+# Ingresar datos de la ecuación diferencial (PVI):    
 
 # Ingresar valores iniciales(x0,y0) =
-# x0 = 2
-# y0 = 1
-x0 = float(input('Ingrese valor inicial x0: '))
-y0 = float(input('Ingrese valor inicial y0: '))
+x0 = 2
+y0 = 1
 
-# Ingresar datos del paso h y del x final:
-# xf = 3 # Valor final (mayor a x0)
-# h = 0.1 # Paso (menor a xf-x0)
-xf = float(input(f"Ingrese valor final xf (mayor a {x0}) : "))
-# Chequeo del xf ingresado
-while (xf<=x0): 
-   xf = float(input(f"xf no es menor a x0, ingrese otro xf que sea mayor a x0={x0}: ")) 
-
-h = float(input(f"Ingrese el paso h (menor a xf-x0= {xf-x0}): " ))
-# Chequeo del h ingresado:
-while (h>xf-x0):
-    h = float(input(f"h no es menor a xf-x0= {xf-x0}, ingrese otro h< {xf-x0}: "))
+# Ingresar datos del paso y del x final:
+xf = 3
+h = 0.1
 
 # Ingresar métodos a realizar:
 
-def agregar_strings_a_lista():
-    """
-    Crea una lista pidiendo al usuario que ingrese strings.
-    """
-    num_strings = int(input("¿Cuántos métodos quieres usar? "))
-    mi_lista = []
-    if (num_strings==3):
-        mi_lista = ['euler','euler-mejorado', 'runge-kutta']
-    else: 
-        for i in range(num_strings):
-            string = input(f"Introduce el método número {i+1} euler, euler-mejorado o ""runge-kutta"" : ")
-            mi_lista.append(string)
-    return mi_lista
-
-metodos = agregar_strings_a_lista()
-# metodos = ['euler','euler-mejorado', 'runge-kutta']
+metodos = ['euler','euler-mejorado', 'runge-kutta']
 
 from sympy import symbols, sympify
 
 # Definir las variables
 x, y = symbols('x y')
 
-# Ingresar función como texto:
-entrada = input("Ingresa la función en x y y (por ejemplo: 2*x + y): ")
-#entrada = x*y+y
+# Ingresar función como texto
+entrada = x*(y**2)
 
 # Convertir el texto en expresión simbólica
 f = sympify(entrada)
@@ -78,16 +45,19 @@ pasos_totales = int((xf-x0)/h)+1
 
 
 # Convertir f a función numérica para usar en el solver:
-
 from sympy.utilities.lambdify import lambdify
 
 f_num = lambdify((x, y), f, 'numpy')
+
+# Definir la función de la EDO: dy/dx = 2x+y
+# Esto es sólo para comparar las aproximaciones con la sol teórica
+# (si la hubiere)
 
 def modelo(x, y):
     
     return f_num(x, y)
 
-# Solución teórica (si la hubiera):    
+#Solución teórica (si la hubiera):    
     
 from scipy.integrate import solve_ivp
 
@@ -119,7 +89,6 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -159,7 +128,7 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
     for i in range(1,total_pasos):
         par[i,0] += x_inicial+ paso*i 
         f_anterior = f.subs({x: par[i-1,0], y: par[i-1,1]}) # f evaluada en paso anterior
-        y_euler = par[i-1,1]+paso*(f.subs({x: par[i,0], y: f_anterior}))#euler para yi actual
+        y_euler = par[i-1,1]+paso*(f_anterior)#euler para yi actual
         f_actual = f.subs({x: par[i,0], y: y_euler})
         par[i,1] += par[i-1,1]+(f_anterior+f_actual)*paso/2
     
@@ -216,16 +185,15 @@ for metodo in metodos:
         pares_euler = euler(x0,y0,xf,h)
         plt.plot(pares_euler[:,0], pares_euler[:,1],'ro', label = 'Euler')
         # Calcular error y poner en lista de errores:
-        error_euler = LA.norm(s3-np.array(pares_euler[:, 1]))**2
+        error_euler = LA.norm(s3-np.array(pares_euler[:5, 1]))**2
         errores_valor.append([error_euler])
         errores_nombre.append('euler')
-       # valores_euler= pares_euler[:,1]
     elif (metodo=='euler-mejorado'):
         # Llamar a la función Euler mejorada y calcular:
         pares_eulermejorado = eulermejorado(x0,y0,xf,h)
         plt.plot(pares_eulermejorado[:,0],pares_eulermejorado[:,1],'g^', label = 'Euler mejorado')
         # Calcular error y poner en lista de errores:
-        error_eulermejorado = LA.norm(s3-np.array(pares_eulermejorado[:, 1]))**2
+        error_eulermejorado = LA.norm(s3-np.array(pares_eulermejorado[0:5, 1]))**2
         errores_valor.append([error_eulermejorado])
         errores_nombre.append('euler-mejorado')
     elif (metodo=='runge-kutta'):
@@ -233,7 +201,7 @@ for metodo in metodos:
         pares_rungekutta = rungekutta(x0,y0,xf,h)
         plt.plot(pares_rungekutta[:,0],pares_rungekutta[:,1],'bs', label = 'Runge Kutta K=4')
         # Calcular error y poner en lista de errores:
-        error_rungekutta = LA.norm(s3-np.array(pares_rungekutta[:, 1]))**2
+        error_rungekutta = LA.norm(s3-np.array(pares_rungekutta[0:5, 1]))**2
         errores_valor.append([error_rungekutta])
         errores_nombre.append('runge-kutta')
 
@@ -250,7 +218,7 @@ plt.grid(True)       # Muestra la cuadrícula
 # Mostrar el gráfico:
 plt.show()
 
-# Comparar soluciones con norma y cálculo del error:
+#Comparar soluciones con norma y cálculo del error:
     
 minimo = min(errores_valor)
 
@@ -265,8 +233,8 @@ import pandas as pd
 
 # Armo dicccionario con los métodos usados y valores hallados:
 
-valores_x = np.zeros(pasos_totales)
-for i in range(pasos_totales):
+valores_x = np.zeros(5)
+for i in range(5):
     valores_x[i] += x0+ h*i 
     
 
@@ -275,11 +243,11 @@ valores = [valores_x, s3 ]
 for i in range(len(metodos)):
     clave.extend([metodos[i]])
     if (metodos[i]=='euler'):
-        valores.extend([pares_euler[:,1]])
+        valores.extend([pares_euler[0:5,1]])
     elif (metodos[i]=='euler-mejorado'):
-        valores.extend([pares_eulermejorado[:,1]])
+        valores.extend([pares_eulermejorado[0:5,1]])
     elif (metodos[i]=='runge-kutta'):
-        valores.extend([pares_rungekutta[:,1]])
+        valores.extend([pares_rungekutta[0:5,1]])
         
 d = {}
 for i in range(len(clave)):
@@ -290,14 +258,14 @@ df =pd.DataFrame(d)
 
 print(df)
 
-# Preguntar al usuario si quiere armar tabla de excel con valores:
+# # Preguntar al usuario si quiere armar tabla de excel con valores:
     
-opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
-# Nombre del archivo de Excel donde deseas almacenar los datos
-nombre_archivo = "datos.xlsx"
+# opcion = input('¿Quiere imprimir los datos en una tabla de excel? S/N: ') 
+# # Nombre del archivo de Excel donde deseas almacenar los datos
+# nombre_archivo = "datos.xlsx"
 
 
-if (opcion=="S"):
-    df.to_excel(nombre_archivo, index=False)
+# if (opcion=="S"):
+#     df.to_excel(nombre_archivo, index=False)
     
  
