@@ -30,6 +30,7 @@ algunas de estas ya fueron usadas en los archivos de prueba.
 - Sobre la tabla de datos: 
 	Se genera automáticamente una tabla tipo dataframe en python con pandas.
 	Además pregunta si se desea exportar la tabla a un archivo excel (.xls), se debe responder por sí o no (S/N)
+	Si se responde otra cosa que no sea S no lo imprime
 	El archivo .xls que se genera está en la misma carpeta y se sobrescribe cada vez que se ejecuta.
 
 B- Carpeta "Pruebas": 
