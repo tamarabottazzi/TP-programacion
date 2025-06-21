@@ -42,7 +42,6 @@ def agregar_strings_a_lista():
     return mi_lista
 
 metodos = agregar_strings_a_lista()
-# metodos = ['euler','euler-mejorado', 'runge-kutta']
 
 import time
 
@@ -108,7 +107,6 @@ def euler(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -139,7 +137,6 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
@@ -175,7 +172,6 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
@@ -208,7 +204,6 @@ for metodo in metodos:
         error_euler = LA.norm(s3-np.array(pares_euler[:, 1]))**2
         errores_valor.append([error_euler])
         errores_nombre.append('euler')
-       # valores_euler= pares_euler[:,1]
     elif (metodo=='euler-mejorado'):
         # Llamar a la función Euler mejorada y calcular:
         pares_eulermejorado = eulermejorado(x0,y0,xf,h)

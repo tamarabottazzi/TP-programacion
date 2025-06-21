@@ -216,7 +216,6 @@ for metodo in metodos:
         error_euler = LA.norm(s3-np.array(pares_euler[:, 1]))**2
         errores_valor.append([error_euler])
         errores_nombre.append('euler')
-       # valores_euler= pares_euler[:,1]
     elif (metodo=='euler-mejorado'):
         # Llamar a la función Euler mejorada y calcular:
         pares_eulermejorado = eulermejorado(x0,y0,xf,h)

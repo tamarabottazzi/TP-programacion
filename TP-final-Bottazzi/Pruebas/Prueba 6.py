@@ -50,8 +50,6 @@ from sympy.utilities.lambdify import lambdify
 f_num = lambdify((x, y), f, 'numpy')
 
 # Definir la función de la EDO: dy/dx = 2x+y
-# Esto es sólo para comparar las aproximaciones con la sol teórica
-# (si la hubiere)
 
 def modelo(x, y):
     
@@ -119,7 +117,6 @@ def eulermejorado(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par = np.zeros((total_pasos,2))
     
     par[0,0] += x_inicial
@@ -155,7 +152,6 @@ def rungekutta(x_inicial,y_inicial,x_final,paso):
 
     """
     total_pasos = int((x_final-x_inicial)/paso)+1
-    #print(total_pasos)
     par_xy = np.zeros((total_pasos,2))
     
     par_xy[0,0] += x_inicial
